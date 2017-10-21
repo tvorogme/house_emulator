@@ -1,4 +1,3 @@
-from collections import defaultdict
 from .abstraction.metric import Metric
 
 class Room:
@@ -8,27 +7,15 @@ class Room:
             - исполнительные устройства: лампа, розетка, запорный водный клапан, обогреватель, кондиционер,
             универсальный механический актуатор, GSM модем."""
 
-    # Python one love
-    needed_types = defaultdict(lambda: None)
-
     # Float
-    temp = Metric()
-
-    water = None
-    needed_types['water'] = float
-
-    clarity = None
-    needed_types['clarity'] = float
-
-    lightness = None
-    needed_types['lightness'] = float
+    temp = Metric(custom_type=float)
+    water = Metric(custom_type=float)
+    clarity = Metric(custom_type=float)
+    lightness = Metric(custom_type=float)
 
     # bool
-    fire = None
-    needed_types['fire'] = bool
-
-    movement = None
-    needed_types['movement'] = bool
+    fire = Metric(custom_type=bool)
+    movement = Metric(custom_type=bool)
 
     # Tuple[Boolean]
     windows = []
@@ -44,15 +31,10 @@ class Room:
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
-            if isinstance(value, (type(getattr(self, key)), self.needed_types[key])):
-                setattr(self, key, value)
-            else:
-                raise TypeError(
-                    "Key ({}) has not valid type. Must be {}, but it's {} now.".format(key, type(getattr(self, key)),
-                                                                                       type(value)))
+            setattr(self, key, value)
 
-            # Check types of windows and doors
-            self._check_types()
+        # Check types of windows and doors
+        self._check_types()
 
     def update_openables(self, mode: str, index: int) -> None:
         if mode == "windows":
