@@ -24,7 +24,7 @@ class HeatSource(Item):
         '''
         Повлиять на комнату
         '''
-        self.room.temp += self.room_influence()
+        self._influences[self.room.temp] = self.room_influence()
 
     def room_influence(self) -> float:
         '''
