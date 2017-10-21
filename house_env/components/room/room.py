@@ -1,4 +1,6 @@
-from .abstraction.metric import Metric
+from .abstraction import Metric
+from .abstraction import Item
+
 
 class Room:
     """Датчики генерируют события в соответствии со своим назначением. Предлагаются следующие датчики:
@@ -6,6 +8,10 @@ class Room:
             - пожарной сигнализации, открытия двери/окна, движения, протечек — они выдают единичные события;
             - исполнительные устройства: лампа, розетка, запорный водный клапан, обогреватель, кондиционер,
             универсальный механический актуатор, GSM модем."""
+
+    items = []
+
+    house = None
 
     # Float
     temp = Metric(custom_type=float)
@@ -21,13 +27,14 @@ class Room:
     windows = []
     doors = []
 
-    def _check_types(self, modes: tuple = ("windows", "doors")) -> None:
-        for mode in modes:
-            iterator = getattr(self, mode)
-            for item in iterator:
-                if not isinstance(item, bool):
-                    raise TypeError(
-                        "Key ({}) has not valid type. Must be bool, but it's {} now.".format(mode, type(item)))
+    _list_types = [(windows, bool), (doors, bool), (items, Item)]
+
+    def _check_types(self) -> None:
+        for _list, _type in self._list_types:
+
+            for item in _list:
+                if not isinstance(item, _type):
+                    raise TypeError("All items must be {}, but {} found.".format(_type, type(item)))
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
@@ -49,6 +56,17 @@ class Room:
         else:
             raise ValueError('No {} with such index'.format(mode))
 
+    def tick(self, apply_influence: bool =True) -> None:
+        '''
+        runs a tick on all the items in the room
+        :param apply_influence: applies the influence of the items if True
+        '''
+        for item in self.items:
+            item.tick()
+
+        if apply_influence:
+            for item in self.items:
+                item.apply_influence()
 
 if __name__ == "__main__":
     Room(temp=0.8, water=0.1, clarity=0.0, lightness=0.9, fire=False, movement=False, windows=[True],

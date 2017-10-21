@@ -1,11 +1,9 @@
-from ..room import Room
-
 
 class Item:
-
+    room = None
     _influences = {}
 
-    def __init__(self, room: Room, **kwargs):
+    def __init__(self, room, **kwargs):
         self.room = room
 
     def tick(self) -> None:

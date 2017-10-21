@@ -1,9 +1,8 @@
-from ..room import Room
 from .item import Item
 
 
 class HeatSource(Item):
-    def __init__(self, temperature: int, state: float, coefficient_effectiveness: float, room: Room, **kwargs):
+    def __init__(self, temperature: int, state: float, coefficient_effectiveness: float, room, **kwargs):
         """
         Абстракция над всем, что влияет на температуру в комнате
 
