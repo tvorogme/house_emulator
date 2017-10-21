@@ -1,5 +1,5 @@
 from collections import defaultdict
-
+from .abstraction.metric import Metric
 
 class Room:
     """Датчики генерируют события в соответствии со своим назначением. Предлагаются следующие датчики:
@@ -12,8 +12,7 @@ class Room:
     needed_types = defaultdict(lambda: None)
 
     # Float
-    temp = None
-    needed_types['temp'] = float
+    temp = Metric()
 
     water = None
     needed_types['water'] = float
